@@ -1,6 +1,5 @@
-import fetch from 'node-fetch';
-import crypto from 'crypto';
-import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
+const PayTRClient = require('./PayTRClient');
 
 export default async (req, res) => {
   try {
@@ -16,74 +15,37 @@ export default async (req, res) => {
       user_phone,
     } = req.body;
 
-    // Diğer gerekli bilgileri ayarla
-    const merchant_id = '307436';
-    const merchant_key = 'AHwq2AFc4SfeMYgG';
-    const merchant_oid = uuidv4();
-    const user_ip = '66.249.70.173';
-    const payment_amount = 100.00; // Örnek olarak 100.00 TL olarak ayarlandı
-    const payment_type = 'card';
-    const installment_count = 0;
-    const card_type = 'visa';
-    const currency = 'TL';
-    const client_lang = 'tr'; 
+    // PayTRClient örneğini oluştur
+    const paytrClient = new PayTRClient({
+      merchant_id: '307436',
+      merchant_key: 'AHwq2AFc4SfeMYgG',
+      merchant_salt: 'frwRCBTbu3BMn52T',
+      client: axios.create(),
+    });
 
-    // PAYTR token'ı oluşturmak için gerekli verileri birleştir
-    const tokenData = `${merchant_id}${user_ip}${merchant_oid}${email}${payment_amount}${payment_type}${installment_count}${currency}`;
-
-    // SHA256 ile hash oluştur
-    const sha256Hash = crypto.createHash('sha256').update(tokenData).digest('hex');
-
-    // HMAC ile şifrele ve base64'e dönüştür
-    const hmac = crypto.createHmac('sha256', merchant_key).update(sha256Hash).digest('base64');
-
-    // POST isteği için gerekli bilgileri birleştir
-    const postData = {
-      merchant_id,
-      paytr_token: hmac,
-      user_ip,
-      merchant_oid,
+    // Ödeme isteğini gönder
+    const paymentResponse = await paytrClient.directApi({
+      user_ip: '66.249.70.173',
+      user_name,
+      user_address,
+      user_phone,
+      merchant_oid: '123123123123', // Sipariş ID'sini buraya yerleştirin
       email,
-      payment_type,
-      payment_amount: payment_amount.toFixed(2), // Düzeltildi
-      installment_count,
-      card_type,
-      currency,
-      client_lang,
+      payment_amount: '100.00', // Ödeme tutarını buraya yerleştirin
+      payment_type: 'card', // Ödeme tipini buraya yerleştirin (ör. 'card')
+      currency: 'TL', // Para birimini buraya yerleştirin (ör. 'TL')
       cc_owner,
       card_number,
       expiry_month,
       expiry_year,
       cvv,
-      merchant_ok_url: 'https://localhost/success', // Müşterinin başarılı ödeme sonrası yönlendirileceği URL
-      merchant_fail_url: 'https://localhost/failed', // Müşterinin ödemesi sırasında beklenmeyen bir hatada yönlendirileceği URL
-      user_name,
-      user_address,
-      user_phone,
-      user_basket: [{ "product": "Test Ürünü", "price": payment_amount.toFixed(2) }], // JSON formatına uygun hale getirildi
-    };
-
-    // POST isteği yapılacak URL
-    const url = 'https://www.paytr.com/odeme';
-
-    console.log(postData);
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'merchant-key': merchant_key
-      },
-      body: JSON.stringify(postData)
+      merchant_ok_url: 'http://localhost/success', // Başarılı ödeme durumunda yönlendirilecek URL
+      merchant_fail_url: 'http://localhost/failed', // Başarısız ödeme durumunda yönlendirilecek URL
+      user_basket: [{ product: 'Test Ürünü', price: '100.00' }], // Ürün bilgisini buraya yerleştirin
     });
 
-    // Yanıtı al ve JSON olarak dönüştür
-    const responseData = await response.json();
-    // Yanıtı console'a yazdır
-    console.log(response);
-    console.log('Response:', responseData);
-
-    // Yanıtı gönder
-    res.status(200).json(responseData);
+    // Ödeme yanıtını gönder
+    res.status(200).json(paymentResponse);
   } catch (error) {
     console.error('Ödeme işlemi sırasında bir hata oluştu:', error);
     res.status(500).json({ error: 'Ödeme işlemi sırasında bir hata oluştu.' });
