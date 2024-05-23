@@ -7,7 +7,13 @@ export default function Payment() {
   const [iframeToken, setIframeToken] = useState('');
 
   const generateRandomOID = () => {
-    return uuidv4(); // Generate random UUID
+    // Generate random alphanumeric string without special characters
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let oid = '';
+    for (let i = 0; i < 8; i++) {
+      oid += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return oid;
   };
 
   const getToken = async () => {
