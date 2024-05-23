@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
+    "body-parser": "^1.20.2",
     "crypto-js": "^4.2.0",
+    "microtime": "^3.1.1",
     "next": "14.2.3",
+    "nodejs-base64-converter": "^1.0.5",
     "react": "^18",
     "react-dom": "^18",
     "uuid": "^9.0.1"

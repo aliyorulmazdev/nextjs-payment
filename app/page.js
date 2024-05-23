@@ -6,8 +6,7 @@ export default function ShoppingPage() {
             <h1>Ürünlerimize Hoş Geldiniz</h1>
             <p>Lütfen aşağıdaki ödeme seçeneklerinden birini seçin:</p>
             <ul>
-                <li><Link href="/payment"><a>Kredi Kartıyla Ödeme</a></Link></li>
-                {/* Diğer ödeme seçeneklerini buraya ekleyin */}
+                <li><Link href="/payment">Kredi Kartıyla Ödeme</Link></li>
             </ul>
         </div>
     );
