@@ -11,14 +11,5 @@
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}"
         },
-        {
-            "name": "SWA: Run nextjs-payment",
-            "request": "launch",
-            "type": "pwa-chrome",
-            "url": "http://localhost:4280",
-            "preLaunchTask": "swa: start nextjs-payment",
-            "webRoot": "${workspaceFolder}/",
-            "timeout": 30000
-        }
     ]
 }

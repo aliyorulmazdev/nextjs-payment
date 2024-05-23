@@ -24,7 +24,7 @@ export default async (req, res) => {
     const payment_amount = 100.00; // Örnek olarak 100.00 TL olarak ayarlandı
     const payment_type = 'card';
     const installment_count = 0;
-    const card_type = 'maximum';
+    const card_type = 'visa';
     const currency = 'TL';
     const client_lang = 'tr'; 
 
