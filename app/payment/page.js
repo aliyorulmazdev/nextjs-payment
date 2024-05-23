@@ -1,15 +1,20 @@
-"use client"
 import { useState } from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid'; // Import UUID v4
 
 export default function Payment() {
   const [iframeToken, setIframeToken] = useState('');
 
+  const generateRandomOID = () => {
+    return uuidv4(); // Generate random UUID
+  };
+
   const getToken = async () => {
     try {
+      const oid = generateRandomOID(); // Generate random OID
       const response = await axios.post('/api/get-token', {
         user_ip: '1.2.3.4',
-        merchant_oid: 'order1234567890',
+        merchant_oid: oid, // Use generated OID
         email: 'customer@example.com',
         payment_amount: 1800,
         currency: 'TL',
