@@ -42,6 +42,7 @@ export default async (req, res) => {
       merchant_ok_url: 'http://localhost/success', // Başarılı ödeme durumunda yönlendirilecek URL
       merchant_fail_url: 'http://localhost/failed', // Başarısız ödeme durumunda yönlendirilecek URL
       user_basket: [{ product: 'Test Ürünü', price: '100.00' }], // Ürün bilgisini buraya yerleştirin
+      sync_mode: 0
     });
 
     // Ödeme yanıtını gönder
